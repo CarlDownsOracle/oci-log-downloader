@@ -1,41 +1,83 @@
 # OCI Log Downloader
 
-Invoke the program like so:
+This sample program lets you download logs from OCI Logging Service and Audit Service to a local file.
 
-## Specific Time Frame
+## Run in OCI Cloud Shell
 
-Pull the entries from a given Log that were written in between specific start and end times: 
+The SDK for Python is pre-configured with your credentials and ready to use
+immediately from within [Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellquickstart_python.htm). For more information on using the SDK 
+for Python from within Cloud Shell, see SDK for [Python Cloud Shell Quick Start](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellquickstart_python.htm).
+
+
+## Run Locally
+
+This sample acquires its credentials from the same configuration file that the CLI uses.
+If you don't want to install the CLI and have OCI Console access, you can create the config file
+manually.
+
+![OCI Console](./images/oci.users.configuration.file.png)
+
+## Install
+
+Set up your Python virtual environment and install the requirements from with the project directory:
+
+    python3 -m venv venv
+    source venv/bin/activate
+    $venv pip install -r requirements.txt
+
+## Usage
+
+Here are some examples of how to invoke the program.
+
+### Specific Time Frame
+
+Download the entries from a given Log that were written in between specific start and end times.
+To target a specific Log, you need to pass in the compartment, log and log group OCIDs.
 
 
     $venv python3 main.py \
     compartment_ocid=ocid1.compartment.oc1... \
     log_ocid=ocid1.log.oc1... \
     log_group_ocid=ocid1.loggroup.oc1... \
-    output_file=./oci_logs2.json \
+    output_file=./oci_log_specific_time_frame.json \
     start_time_iso_format=2023-07-11T00:26:27 \
     end_time_iso_format=2023-07-11T00:27:27
 
 _ISO format supported: "%Y-%m-%dT%H:%M:%S"_
 
-## Relative Time Frame
+### Relative Time Frame
 
-Pull the last 5 minutes of entries from a given Log: 
+Download the last 5 minutes of entries from a given log.
 
     $venv python3 main.py \
     compartment_ocid=ocid1.compartment.oc1... \
     log_ocid=ocid1.log.oc1... \
     log_group_ocid=ocid1.loggroup.oc1... \
-    output_file=./oci_logs2_relative.json \
+    output_file=./oci_log_relative_time_frame.json \
     start_time_minutes_ago=5 \
     end_time_minutes_ago=0
 
 
-## Relative Time Frame, Entire Compartment
+### All Logs in Log Group
 
-Pull the last 2 minutes of entries from all logs within a given Compartment:
+Download the last 5 minutes of entries from a given log group.  Note the
+absence of a log OCID.
+
+    $venv python3 main.py \
+    compartment_ocid=ocid1.compartment.oc1... \
+    log_group_ocid=ocid1.loggroup.oc1... \
+    output_file=./oci_log_group_scope.json \
+    start_time_minutes_ago=5 \
+    end_time_minutes_ago=0
+
+
+### All Logs in Compartment
+
+Downloads the last 60 minutes of entries from *all logs within a given Compartment* including _Audit logs.
+Note the absence of log and log group OCIDs.
 
     $venv python3 main.py \
     compartment_ocid=ocid1.compartment.oc1... \
     output_file=./oci_logs2_comp.json \
-    start_time_minutes_ago=2 \
+    start_time_minutes_ago=60 \
     end_time_minutes_ago=0
