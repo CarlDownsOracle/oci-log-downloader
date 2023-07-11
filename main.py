@@ -141,6 +141,31 @@ def get_args():
     return config
 
 
+def get_start_and_end_times(config: dict):
+
+    if config.get('start_time_minutes_ago'):
+        start_time = get_now_utc() - timedelta(minutes=int(config.get('start_time_minutes_ago')))
+        end_time = get_now_utc() - timedelta(minutes=int(config.get('end_time_minutes_ago')))
+
+    elif config.get('start_time_hours_ago'):
+        start_time = get_now_utc() - timedelta(hours=int(config.get('start_time_hours_ago')))
+        end_time = get_now_utc() - timedelta(hours=int(config.get('end_time_hours_ago')))
+
+    elif config.get('start_time_days_ago'):
+        start_time = get_now_utc() - timedelta(days=int(config.get('start_time_days_ago')))
+        end_time = get_now_utc() - timedelta(days=int(config.get('end_time_days_ago')))
+
+    elif config.get('start_time_weeks_ago'):
+        start_time = get_now_utc() - timedelta(weeks=int(config.get('start_time_weeks_ago')))
+        end_time = get_now_utc() - timedelta(weeks=int(config.get('end_time_weeks_ago')))
+
+    else:
+        start_time = dt_from_iso_format(config.get('start_time_iso_format'))
+        end_time = dt_from_iso_format(config.get('end_time_iso_format'))
+
+    return start_time, end_time
+
+
 def main():
     """
     Build the search logs SDK query and time frame, then download and persist the logs as JSON.
@@ -156,14 +181,7 @@ def main():
                         config.get('log_ocid'),
                         config.get('where_log_content_contains'))
 
-    if config.get('start_time_minutes_ago'):
-        start_time = get_now_utc() - timedelta(minutes=int(config.get('start_time_minutes_ago')))
-        end_time = get_now_utc() - timedelta(minutes=int(config.get('end_time_minutes_ago')))
-
-    else:
-        start_time = dt_from_iso_format(config.get('start_time_iso_format'))
-        end_time = dt_from_iso_format(config.get('end_time_iso_format'))
-
+    start_time, end_time = get_start_and_end_times(config)
     output_file = config['output_file']
     download(query, start_time, end_time, output_file)
 

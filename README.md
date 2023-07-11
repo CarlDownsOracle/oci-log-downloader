@@ -56,6 +56,36 @@ Download the last 5 minutes of entries from a given log.
     start_time_minutes_ago=5 \
     end_time_minutes_ago=0
 
+Download the 1 hours worth of logs from 6 hours ago.
+
+    $venv python3 main.py \
+    compartment_ocid=ocid1.compartment.oc1... \
+    log_ocid=ocid1.log.oc1... \
+    log_group_ocid=ocid1.loggroup.oc1... \
+    output_file=./oci_log_1_day.json \
+    start_time_hours_ago=6 \
+    end_time_hours_ago=5
+
+Download the last day of entries from a given log.
+
+    $venv python3 main.py \
+    compartment_ocid=ocid1.compartment.oc1... \
+    log_ocid=ocid1.log.oc1... \
+    log_group_ocid=ocid1.loggroup.oc1... \
+    output_file=./oci_log_1_day.json \
+    start_time_days_ago=1 \
+    end_time_days_ago=0
+
+Download the last week of entries from a given log.
+
+    $venv python3 main.py \
+    compartment_ocid=ocid1.compartment.oc1... \
+    log_ocid=ocid1.log.oc1... \
+    log_group_ocid=ocid1.loggroup.oc1... \
+    output_file=./oci_log_1_day.json \
+    start_time_weeks_ago=1 \
+    end_time_weeks_ago=0
+
 
 ### All Logs in Log Group
 
