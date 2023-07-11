@@ -27,3 +27,4 @@ tests/temp
 temp
 venv/
 local.env
+*.json
