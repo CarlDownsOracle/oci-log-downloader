@@ -4,6 +4,7 @@ import json
 import oci
 import os
 from oci.config import from_file
+import sys
 
 configuration = from_file(profile_name=os.environ.get('OCI_CLI_PROFILE', 'DEFAULT'))
 client = oci.loggingsearch.LogSearchClient(configuration)
@@ -15,6 +16,7 @@ client = oci.loggingsearch.LogSearchClient(configuration)
 
 def get_search_results(query, start_time, end_time):
     """
+    Call OCI Logging Service via the SDK
     :param query:
     :param start_time:
     :param end_time:
@@ -60,6 +62,12 @@ def get_search_results(query, start_time, end_time):
 
 def build_query(compartment_ocid, log_group_ocid, log_ocid, where_clause):
     """
+    Assemble the log search query.
+    :param compartment_ocid: REQUIRED
+    :param log_group_ocid: OPTIONAL
+    :param log_ocid: OPTIONAL
+    :param where_clause: OPTIONAL
+    :return: String
     """
 
     search_scope = 'search "{}"'.format(compartment_ocid)
@@ -84,13 +92,16 @@ def get_now_utc():
     return datetime.now(timezone.utc)
 
 
-def download(query, start_time, end_time):
+def download(query, start_time, end_time, output_file):
     """
+    Download the logs and persist to file.
+    :param query:
+    :param start_time:
+    :param end_time:
+    :return:
     """
 
     results_list = get_search_results(query, start_time, end_time)
-
-    output_file = "./oci_logs.json"
 
     if len(results_list):
         print(f'writing logs to file {output_file}')
@@ -100,7 +111,14 @@ def download(query, start_time, end_time):
 
 def main():
     """
+    Build the search logs SDK query and time frame, then download and persist the logs as JSON.
     """
+
+    args = sys.argv[1:]
+    print(args)
+
+    # compartment OCID is required
+    # Log Group, Log and where clause are all optional
 
     compartment_ocid = 'ocid1.compartment.oc1..'
     log_group_ocid = 'ocid1.loggroup.oc1...'
@@ -109,15 +127,19 @@ def main():
 
     query = build_query(compartment_ocid, log_group_ocid, log_ocid, where_clause)
 
+    # a 14-day window is supported
+
     start_time_iso_format = '2023-07-11 00:26:27.140921+00:00'
     end_time_iso_format = '2023-07-11 00:27:27.140921+00:00'
+
+    # you can use a relative time frame
 
     use_relative_times = True
     start_minutes_back = 10
     end_minutes_back = 0
 
     if use_relative_times:
-        print(f'using relative times from {start_minutes_back} to {end_minutes_back} minutes ago ...')
+        print(f'using relative time frame from {start_minutes_back} to {end_minutes_back} minutes ago ...')
         start_time = get_now_utc() - timedelta(minutes=start_minutes_back)
         end_time = get_now_utc() - timedelta(minutes=end_minutes_back)
 
@@ -125,7 +147,8 @@ def main():
         start_time = datetime.fromisoformat(start_time_iso_format)
         end_time = datetime.fromisoformat(end_time_iso_format)
 
-    download(query, start_time, end_time)
+    output_file = "./oci_logs.json"
+    download(query, start_time, end_time, output_file)
 
 
 if __name__ == '__main__':
