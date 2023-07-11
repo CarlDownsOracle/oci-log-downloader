@@ -56,7 +56,7 @@ def get_search_results(query, start_time, end_time):
         else:
             break
 
-    print(f'total logs retrieved = {len(log_line_array)}')
+    print(f'total logs retrieved / {len(log_line_array)}')
     return log_line_array
 
 
@@ -109,45 +109,46 @@ def download(query, start_time, end_time, output_file):
             json.dump(results_list, f, indent=2)
 
 
+def get_args():
+    """
+    arguments expected to be in the form of {lvalue}={rvalue} with no spaces between.
+    :return:
+    """
+    args = sys.argv[1:]
+    config = {}
+
+    for arg in args:
+        parts = arg.split('=')
+        config[parts[0]] = parts[1]
+
+    print(f'\n configuration / {json.dumps(config, indent=2)}')
+    return config
+
+
 def main():
     """
     Build the search logs SDK query and time frame, then download and persist the logs as JSON.
+    A 14-day window is supported.
     """
 
-    args = sys.argv[1:]
-    print(args)
+    config = get_args()
 
-    # compartment OCID is required
-    # Log Group, Log and where clause are all optional
+    # compartment OCID is required where Log Group OCID, Log OCID and where clause are all optional
 
-    compartment_ocid = 'ocid1.compartment.oc1..'
-    log_group_ocid = 'ocid1.loggroup.oc1...'
-    log_ocid = 'ocid1.log.oc1...'
-    where_clause = None
+    query = build_query(config['compartment_ocid'],
+                        config.get('log_group_ocid'),
+                        config.get('log_ocid'),
+                        config.get('where_clause'))
 
-    query = build_query(compartment_ocid, log_group_ocid, log_ocid, where_clause)
-
-    # a 14-day window is supported
-
-    start_time_iso_format = '2023-07-11 00:26:27.140921+00:00'
-    end_time_iso_format = '2023-07-11 00:27:27.140921+00:00'
-
-    # you can use a relative time frame
-
-    use_relative_times = True
-    start_minutes_back = 10
-    end_minutes_back = 0
-
-    if use_relative_times:
-        print(f'using relative time frame from {start_minutes_back} to {end_minutes_back} minutes ago ...')
-        start_time = get_now_utc() - timedelta(minutes=start_minutes_back)
-        end_time = get_now_utc() - timedelta(minutes=end_minutes_back)
+    if config.get('start_time_minutes_ago'):
+        start_time = get_now_utc() - timedelta(minutes=int(config.get('start_time_minutes_ago')))
+        end_time = get_now_utc() - timedelta(minutes=int(config.get('end_time_minutes_ago')))
 
     else:
-        start_time = datetime.fromisoformat(start_time_iso_format)
-        end_time = datetime.fromisoformat(end_time_iso_format)
+        start_time = datetime.fromisoformat(config.get('start_time_iso_format'))
+        end_time = datetime.fromisoformat(config.get('end_time_iso_format'))
 
-    output_file = "./oci_logs.json"
+    output_file = config['output_file']
     download(query, start_time, end_time, output_file)
 
 
