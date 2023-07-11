@@ -1,5 +1,5 @@
-
-from datetime import timedelta, datetime, timezone
+import datetime
+from datetime import timedelta, timezone
 import json
 import oci
 import os
@@ -89,7 +89,7 @@ def build_query(compartment_ocid, log_group_ocid, log_ocid, where_clause):
 
 
 def get_now_utc():
-    return datetime.now(timezone.utc)
+    return datetime.datetime.now(timezone.utc)
 
 
 def download(query, start_time, end_time, output_file):
@@ -145,8 +145,8 @@ def main():
         end_time = get_now_utc() - timedelta(minutes=int(config.get('end_time_minutes_ago')))
 
     else:
-        start_time = datetime.fromisoformat(config.get('start_time_iso_format'))
-        end_time = datetime.fromisoformat(config.get('end_time_iso_format'))
+        start_time = datetime.datetime.fromisoformat(config.get('start_time_iso_format'))
+        end_time = datetime.datetime.fromisoformat(config.get('end_time_iso_format'))
 
     output_file = config['output_file']
     download(query, start_time, end_time, output_file)
