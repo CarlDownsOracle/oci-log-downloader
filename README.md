@@ -6,14 +6,16 @@ Invoke the program like so:
 
 Pull the entries from a given Log that were written in between specific start and end times: 
 
+
     $venv python3 main.py \
     compartment_ocid=ocid1.compartment.oc1... \
     log_ocid=ocid1.log.oc1... \
     log_group_ocid=ocid1.loggroup.oc1... \
     output_file=./oci_logs2.json \
-    start_time_iso_format="2023-07-11 00:26:27.140921+00:00" \
-    end_time_iso_format="2023-07-11 00:27:27.140921+00:00"
+    start_time_iso_format=2023-07-11T00:26:27 \
+    end_time_iso_format=2023-07-11T00:27:27
 
+_ISO format supported: "%Y-%m-%dT%H:%M:%S"_
 
 ## Relative Time Frame
 

@@ -1,5 +1,4 @@
-import datetime
-from datetime import timedelta, timezone
+from datetime import timedelta, timezone, datetime
 import json
 import oci
 import os
@@ -89,7 +88,23 @@ def build_query(compartment_ocid, log_group_ocid, log_ocid, where_clause):
 
 
 def get_now_utc():
-    return datetime.datetime.now(timezone.utc)
+    return datetime.now(timezone.utc)
+
+
+def dt_from_iso_format(datetime_in_iso_format: str):
+    """
+    See https://stackoverflow.com/questions/60266554/type-object-datetime-datetime-has-no-attribute-fromisoformat
+    :param datetime_in_iso_format:
+    :return: datetime object
+    """
+
+    # Python3.6 and below
+    dt = datetime.strptime(datetime_in_iso_format, "%Y-%m-%dT%H:%M:%S")
+
+    # Python3.7+
+    # dt = datetime.fromisoformat(datetime_in_iso_format)
+
+    return dt
 
 
 def download(query, start_time, end_time, output_file):
@@ -98,6 +113,7 @@ def download(query, start_time, end_time, output_file):
     :param query:
     :param start_time:
     :param end_time:
+    :param output_file:
     :return:
     """
 
@@ -145,8 +161,8 @@ def main():
         end_time = get_now_utc() - timedelta(minutes=int(config.get('end_time_minutes_ago')))
 
     else:
-        start_time = datetime.datetime.fromisoformat(config.get('start_time_iso_format'))
-        end_time = datetime.datetime.fromisoformat(config.get('end_time_iso_format'))
+        start_time = dt_from_iso_format(config.get('start_time_iso_format'))
+        end_time = dt_from_iso_format(config.get('end_time_iso_format'))
 
     output_file = config['output_file']
     download(query, start_time, end_time, output_file)
