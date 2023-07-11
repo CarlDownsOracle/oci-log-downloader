@@ -59,14 +59,14 @@ def get_search_results(query, start_time, end_time):
     return log_line_array
 
 
-def build_query(compartment_ocid, log_group_ocid, log_ocid, where_clause):
+def build_query(compartment_ocid, log_group_ocid=None, log_ocid=None, where_log_content_contains=None):
     """
     Assemble the log search query.
     :param compartment_ocid: REQUIRED
     :param log_group_ocid: OPTIONAL
     :param log_ocid: OPTIONAL
-    :param where_clause: OPTIONAL
-    :return: String
+    :param where_log_content_contains: OPTIONAL
+    :return: Query string
     """
 
     search_scope = 'search "{}"'.format(compartment_ocid)
@@ -79,8 +79,8 @@ def build_query(compartment_ocid, log_group_ocid, log_ocid, where_clause):
         if log_ocid:
             search_scope = 'search "{}/{}/{}"'.format(compartment_ocid, log_group_ocid, log_ocid)
 
-    if where_clause:
-        search_query = '{}|{}'.format(search_scope, where_clause)
+    if where_log_content_contains:
+        search_query = "{}|logContent='*{}*'".format(search_scope, where_log_content_contains)
     else:
         search_query = search_scope
 
@@ -137,7 +137,7 @@ def get_args():
         parts = arg.split('=')
         config[parts[0]] = parts[1]
 
-    print(f'\n configuration / {json.dumps(config, indent=2)}')
+    print(f'\nscript parameters \n{json.dumps(config, indent=2)}\n')
     return config
 
 
@@ -154,7 +154,7 @@ def main():
     query = build_query(config['compartment_ocid'],
                         config.get('log_group_ocid'),
                         config.get('log_ocid'),
-                        config.get('where_clause'))
+                        config.get('where_log_content_contains'))
 
     if config.get('start_time_minutes_ago'):
         start_time = get_now_utc() - timedelta(minutes=int(config.get('start_time_minutes_ago')))

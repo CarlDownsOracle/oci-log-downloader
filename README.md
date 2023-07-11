@@ -80,3 +80,29 @@ Note the absence of log and log group OCIDs.
     output_file=./oci_logs_from_compartment.json \
     start_time_minutes_ago=60 \
     end_time_minutes_ago=0
+
+
+### Filtering
+
+Download the log content stanza contains a given string.  The program passes this as a wildcard so
+it will return partial matches.
+
+
+    $venv python3 main.py \
+    compartment_ocid=ocid1.compartment.oc1... \
+    log_ocid=ocid1.log.oc1... \
+    log_group_ocid=ocid1.loggroup.oc1... \
+    output_file=./oci_log_rejects.json \
+    start_time_iso_format=2023-07-11T00:26:27 \
+    end_time_iso_format=2023-07-11T00:27:27 \
+    where_log_content_contains="REJECT"
+
+
+    $venv python3 main.py \
+    compartment_ocid=ocid1.compartment.oc1... \
+    log_ocid=ocid1.log.oc1... \
+    log_group_ocid=ocid1.loggroup.oc1... \
+    output_file=./oci_log_rejects.json \
+    start_time_iso_format=2023-07-11T00:26:27 \
+    end_time_iso_format=2023-07-11T00:27:27 \
+    where_log_content_contains="10.0.0.218"
