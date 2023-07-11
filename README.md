@@ -5,9 +5,8 @@ This sample program lets you download logs from OCI Logging Service and Audit Se
 ## Run in OCI Cloud Shell
 
 The SDK for Python is pre-configured with your credentials and ready to use
-immediately from within [Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellquickstart_python.htm). For more information on using the SDK 
-for Python from within Cloud Shell, see SDK for [Python Cloud Shell Quick Start](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellquickstart_python.htm).
-
+immediately from within [Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellquickstart_python.htm). 
+Files produced by this sample within Cloud Shell can be subsequently downloaded to your local machine.
 
 ## Run Locally
 
