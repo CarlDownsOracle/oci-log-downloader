@@ -65,7 +65,7 @@ absence of a log OCID.
     $venv python3 main.py \
     compartment_ocid=ocid1.compartment.oc1... \
     log_group_ocid=ocid1.loggroup.oc1... \
-    output_file=./oci_entire_log_group.json \
+    output_file=./oci_logs_from_log_group.json \
     start_time_minutes_ago=5 \
     end_time_minutes_ago=0
 
@@ -77,6 +77,6 @@ Note the absence of log and log group OCIDs.
 
     $venv python3 main.py \
     compartment_ocid=ocid1.compartment.oc1... \
-    output_file=./oci_log_entire_compartment.json \
+    output_file=./oci_logs_from_compartment.json \
     start_time_minutes_ago=60 \
     end_time_minutes_ago=0
