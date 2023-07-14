@@ -11,7 +11,7 @@ If you don't want to install the CLI and have OCI Console access, you can create
 
 ## Run in OCI Cloud Shell
 
-The [OCI Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellquickstart_python.htm) comes
+The [OCI Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellgettingstarted.htm) comes
 pre-populated with the `~/.oci/config` for authentication. Log files can be subsequently 
 [downloaded from Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellgettingstarted.htm#:~:text=To%20download%20a%20file%20from,Shell%20window%20and%20select%20Download.) 
 to your local machine.
